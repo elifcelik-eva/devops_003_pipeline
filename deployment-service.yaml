@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: devops-application
+  labels:
+    app: devops-application
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: devops-application
+  template:
+    metadata:
+      labels:
+        app: devops-application
+    spec:
+      containers:
+        - name: devops-application
+          image: elifcelik49/devops-application:latest
+          imagePullPolicy: Always
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "300Mi"
+              cpu: "500m"
+          ports:
+            - containerPort: 8080
+              name: http
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: devops-application
+  labels:
+    app: devops-application
+spec:
+  selector:
+    app: devops-application
+  ports:
+    - name: http
+      protocol: TCP
+      port: 9090
+      targetPort: 8080
+  type: NodePort
